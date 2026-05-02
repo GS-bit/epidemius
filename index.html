@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <title>Epidemius</title>
+</head>
+
+<body style="background-color: $indigo-100">
+    <div class="container">
+        <div class="row">
+            <h1>Epidemius</h1>
+        </div>
+
+        <div class="row">
+            <p>Calculadora epidêmica baseada no modelo compartimental SEIR. Resolução a partir do método de Runge-Kutta de 4ª ordem.</p>
+        </div>
+
+        <div class="row mt-3 mb-1">
+            <hr />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tamanho populacional:</label>
+            <input type="number" min="0" class="form-control" id="n" autofocus />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Número inicial de infectados:</label>
+            <input type="number" min="0" class="form-control" id="io" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Número reprodutivo básico (de 0 a 10):</label>
+            <input type="number" min="0" max="10" class="form-control" id="r0" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Redução percentual na transmissão (de 0 a 1):</label>
+            <input type="number" min="0" max="1" class="form-control" id="theta" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Taxa de mortalidade (de 0 a 100%):</label>
+            <input type="number" min="0" max="100" class="form-control" id="delta" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Taxa de internamento (de 0 a 100%):</label>
+            <input type="number" min="0" max="100" class="form-control" id="tau" />
+        </div>
+
+        <div class="row mt-3 mb-1">
+            <hr />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo (em dias) em que o paciente está infectado:</label>
+            <input type="number" min="1" class="form-control" id="tinf" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo (em dias) de incubação:</label>
+            <input type="number" min="1" class="form-control" id="tinc" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo (em dias) do final do período de incubação até o falecimento:</label>
+            <input type="number" min="1" class="form-control" id="tm" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo (em dias) de internamento hospitalar:</label>
+            <input type="number" min="1" class="form-control" id="tint" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo (em dias) de recuperação para casos leves:</label>
+            <input type="number" min="1" class="form-control" id="trec" />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo (em dias) decorrido até a hospitalização:</label>
+            <input type="number" min="1" class="form-control" id="thosp" />
+        </div>
+
+        <div class="row mt-3 mb-1">
+            <hr />
+        </div>
+
+        <div class="row">
+            <label class="form-label mt-2">Tempo de simulação (dias):</label>
+            <input type="number" min="1" class="form-control" id="ts" />
+        </div>
+
+        <div class="row mt-5">
+            <button class="btn btn-primary mb-5" id="evaluate-button">Processar dados</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>
