@@ -1,21 +1,21 @@
-function rungekuttaSEIR(t0, initial_state, tf, derivatives, n_iter){
+function rungeKuttaSEIR(t0, initialState, tf, derivatives, nIter){
     /* It performs fourth order Runge-Kutta method on SEIR.
      * t0: initial time value
-     * initial_state: an array containing the initial values of S, E, I and R, in this exact order
+     * initialState: an array containing the initial values of S, E, I and R, in this exact order
      * tf: final time value
      * derivatives: an array containing the derivatives dS_dt, dE_dt, dI_dt and dR_dt, in this exact order
-     * n_iter: number of iteractions
+     * nIter: number of iteractions
      *
      * The function returns an array containg the values of S, E, I and R at the final time, in this exact order
      */
 
-    const H = (tf - t0) / n_iter;
+    const H = (tf - t0) / nIter;
 
     let t = t0;
-    let y = [...initial_state];
+    let y = [...initialState];
     let k1, k2, k3, k4;
 
-    for(let i = 0; i < n_iter; i++){
+    for(let i = 0; i < nIter; i++){
         k1 = derivatives(y[0], y[1], y[2]);
         k2 = derivatives(y[0] + H * k1[0]/2, y[1] + H * k1[1]/2, y[2] + H * k1[2]/2);
         k3 = derivatives(y[0] + H * k2[0]/2, y[1] + H * k2[1]/2, y[2] + H * k2[2]/2);
@@ -31,8 +31,113 @@ function rungekuttaSEIR(t0, initial_state, tf, derivatives, n_iter){
     return y;
 }
 
-const evaluate_button = document.getElementById("evaluate-button");
+function drawTable(resultsS, resultsE, resultsI, resultsR){
+    /* It draws a table on the page.
+     * resultsS: an array containing the daily values of S
+     * resultsE: an array containing the daily values of E
+     * resultsI: an array containing the daily values of I
+     * resultsR: an array containing the daily values of R
+     */
 
+    document.getElementById("results-table").querySelector("tbody").innerHTML = ""; // Since the user can perform a calculation after another, it's important to clean the table first
+
+    for(let i = ts; i >= 0; i--){
+        console.log(i);
+        document.getElementById("results-table").querySelector("tbody").insertAdjacentHTML("afterbegin", `<tr>
+        <td>${i}</td>
+        <td>${Math.round(resultsS[i])}</td>
+        <td>${Math.round(resultsE[i])}</td>
+        <td>${Math.round(resultsI[i])}</td>
+        <td>${Math.round(resultsR[i])}</td>
+        </tr>`); // We use round here, but not on the results arrays, because, on the calculating realm, we need the precise results. However, to the user, we need to show the numbers on an appropriate format.
+    }
+
+    document.getElementById("results-table").style.display = "";
+}
+
+function drawChart(resultsS, resultsE, resultsI, resultsR){
+    /* It draws a chart on the page.
+     * resultsS: an array containing the daily values of S
+     * resultsE: an array containing the daily values of E
+     * resultsI: an array containing the daily values of I
+     * resultsR: an array containing the daily values of R
+     */
+
+    const ctx = document.getElementById("chart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: "Gráfico",
+            datasets: [{
+                label: "Suscetíveis",
+                data: resultsS,
+                borderColor: "#4bc0c0",
+                backgroundColor: "#4bc0c0",
+                borderWidth: 2,
+                fill: false
+            },
+
+            {
+                label: "Expostos",
+                data: resultsE,
+                borderColor: "#ff6384",
+                backgroundColor: "#ff6384",
+                borderWidth: 2,
+                fill: false
+            },
+
+            {
+                label: "Infectados",
+                data: resultsI,
+                borderColor: "#36a2eb",
+                backgroundColor: "#36a2eb",
+                borderWidth: 2,
+                fill: false
+            },
+
+            {
+                label: "Recuperados",
+                data: resultsR,
+                borderColor: "#ffcd56",
+                backgroundColor: "#ffcd56",
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+
+            plugins: {
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'xy',
+                        threshold: 10
+                    },
+                    zoom: {
+                        wheel: {
+                            enabled: true
+                        },
+
+                        pinch: {
+                            enabled: true
+                        },
+
+                        mode: 'xy',
+                    }
+                }
+            }
+        }
+    });
+}
+
+const evaluate_button = document.getElementById("evaluate-button");
 evaluate_button.addEventListener("click", ()  => {
     /* Telling the user we have to wait the process: */
 
@@ -77,121 +182,36 @@ evaluate_button.addEventListener("click", ()  => {
 
     /* These are the arrays used to store the results: */
 
-    let results_s = [current_state[0]];
-    let results_e = [current_state[1]];
-    let results_i = [current_state[2]];
-    let results_r = [current_state[3]];
+    let resultsS = [current_state[0]];
+    let resultsE = [current_state[1]];
+    let resultsI = [current_state[2]];
+    let resultsR = [current_state[3]];
 
     /* Calculating: */
 
     const N_ITER = 100;
 
     for(let t = 0; t < ts; t++){
-        current_state = rungekuttaSEIR(t, current_state, t+1, derivatives, N_ITER);
+        current_state = rungeKuttaSEIR(t, current_state, t+1, derivatives, N_ITER);
 
-        results_s.push(current_state[0]);
-        results_e.push(current_state[1]);
-        results_i.push(current_state[2]);
-        results_r.push(current_state[3]);
+        resultsS.push(current_state[0]);
+        resultsE.push(current_state[1]);
+        resultsI.push(current_state[2]);
+        resultsR.push(current_state[3]);
     }
 
-    results_s.reverse();
-    results_e.reverse();
-    results_i.reverse();
-    results_r.reverse();
+    resultsS.reverse();
+    resultsE.reverse();
+    resultsI.reverse();
+    resultsR.reverse();
 
     /* Showing the results on the screen: */
 
-    document.getElementById("results-table").querySelector("tbody").innerHTML = "";
-
-    for(let i = ts; i >= 0; i--){
-        console.log(i);
-        document.getElementById("results-table").querySelector("tbody").insertAdjacentHTML("afterbegin", `<tr>
-        <td>${i}</td>
-        <td>${Math.round(results_s[i])}</td>
-        <td>${Math.round(results_e[i])}</td>
-        <td>${Math.round(results_i[i])}</td>
-        <td>${Math.round(results_r[i])}</td>
-        </tr>`); // We use round here, but not on the results arrays, because, on the calculating realm, we need the precise results. However, to the user, we need to show the numbers on an appropriate format.
-    }
-
-    document.getElementById("results-table").style.display = "";
+    drawTable(resultsS, resultsE, resultsI, resultsR);
+    drawChart(resultsS, resultsE, resultsI, resultsR);
 
     /* Setting default settings: */
 
     document.getElementById("evaluate-button").innerHTML = "Processar dados";
     document.getElementById("evaluate-button").classList.replace("btn-secondary", "btn-primary");
-
-    const ctx = document.getElementById("chart").getContext("2d");
-
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: "Gráfico",
-            datasets: [{
-                label: "Suscetíveis",
-                data: results_s,
-                borderColor: "#4bc0c0",
-                backgroundColor: "#4bc0c0",
-                borderWidth: 2,
-                fill: false
-            },
-
-            {
-                label: "Expostos",
-                data: results_e,
-                borderColor: "#ff6384",
-                backgroundColor: "#ff6384",
-                borderWidth: 2,
-                fill: false
-            },
-
-            {
-                label: "Infectados",
-                data: results_i,
-                borderColor: "#36a2eb",
-                backgroundColor: "#36a2eb",
-                borderWidth: 2,
-                fill: false
-            },
-
-            {
-                label: "Recuperados",
-                data: results_r,
-                borderColor: "#ffcd56",
-                backgroundColor: "#ffcd56",
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-
-            plugins: {
-                zoom: {
-                    pan: {
-                        enabled: true,
-                        mode: 'xy',
-                        threshold: 10
-                    },
-                    zoom: {
-                        wheel: {
-                            enabled: true
-                        },
-
-                        pinch: {
-                            enabled: true
-                        },
-
-                        mode: 'xy',
-                    }
-                }
-            }
-        }
-    });
 });
