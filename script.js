@@ -33,16 +33,15 @@ function rungeKuttaSEIR(t0, initialState, tf, derivatives, nIter){
 
 function drawTable(resultsS, resultsE, resultsI, resultsR){
     /* It draws a table on the page.
-     * resultsS: an array containing the daily values of S
-     * resultsE: an array containing the daily values of E
-     * resultsI: an array containing the daily values of I
-     * resultsR: an array containing the daily values of R
+     * resultsS: an array containing the daily values of S, in which resultsS[0] is the first day
+     * resultsE: an array containing the daily values of E, in which resultsE[0] is the first day
+     * resultsI: an array containing the daily values of I, in which resultsI[0] is the first day
+     * resultsR: an array containing the daily values of R, in which resultsR[0] is the first day
      */
 
     document.getElementById("results-table").querySelector("tbody").innerHTML = ""; // Since the user can perform a calculation after another, it's important to clean the table first
 
-    for(let i = ts; i >= 0; i--){
-        console.log(i);
+    for(let i = resultsS.length - 1; i >= 0; i--){
         document.getElementById("results-table").querySelector("tbody").insertAdjacentHTML("afterbegin", `<tr>
         <td>${i}</td>
         <td>${Math.round(resultsS[i])}</td>
@@ -63,19 +62,24 @@ function drawChart(resultsS, resultsE, resultsI, resultsR){
      * resultsR: an array containing the daily values of R
      */
 
+    days = [];
+
+    for(let i = 0; i < resultsS.length; i++){
+        days.push(i);
+    }
+
     const ctx = document.getElementById("chart").getContext("2d");
 
     new Chart(ctx, {
         type: "line",
         data: {
-            labels: "Gráfico",
+            labels: days,
             datasets: [{
                 label: "Suscetíveis",
                 data: resultsS,
                 borderColor: "#4bc0c0",
                 backgroundColor: "#4bc0c0",
-                borderWidth: 2,
-                fill: false
+                borderWidth: 2
             },
 
             {
@@ -83,8 +87,7 @@ function drawChart(resultsS, resultsE, resultsI, resultsR){
                 data: resultsE,
                 borderColor: "#ff6384",
                 backgroundColor: "#ff6384",
-                borderWidth: 2,
-                fill: false
+                borderWidth: 2
             },
 
             {
@@ -92,8 +95,7 @@ function drawChart(resultsS, resultsE, resultsI, resultsR){
                 data: resultsI,
                 borderColor: "#36a2eb",
                 backgroundColor: "#36a2eb",
-                borderWidth: 2,
-                fill: false
+                borderWidth: 2
             },
 
             {
@@ -101,35 +103,32 @@ function drawChart(resultsS, resultsE, resultsI, resultsR){
                 data: resultsR,
                 borderColor: "#ffcd56",
                 backgroundColor: "#ffcd56",
-                borderWidth: 2,
-                fill: false
+                borderWidth: 2
             }]
         },
 
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+            responsive: true,
+            plugins: {
+                title: {
+                    text: "Resultado",
+                    display: true
                 }
             },
 
-            plugins: {
-                zoom: {
-                    pan: {
-                        enabled: true,
-                        mode: 'xy',
-                        threshold: 10
-                    },
-                    zoom: {
-                        wheel: {
-                            enabled: true
-                        },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        text: "Indivíduos",
+                        display: true
+                    }
+                },
 
-                        pinch: {
-                            enabled: true
-                        },
-
-                        mode: 'xy',
+                x: {
+                    title: {
+                        text: "Tempo (dias)",
+                        display: true
                     }
                 }
             }
@@ -200,10 +199,13 @@ evaluate_button.addEventListener("click", ()  => {
         resultsR.push(current_state[3]);
     }
 
-    resultsS.reverse();
-    resultsE.reverse();
-    resultsI.reverse();
-    resultsR.reverse();
+
+    console.log(resultsS);
+
+    //resultsS = resultsS.reverse();
+    //resultsE = resultsE.reverse();
+    //resultsI = resultsI.reverse();
+    //resultsR = resultsR.reverse();
 
     /* Showing the results on the screen: */
 
