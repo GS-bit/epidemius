@@ -17,33 +17,33 @@
 
     <div class="container">
         <div class="row">
-            <label class="form-label mt-3">Tamanho populacional:</label>
-            <input type="number" min="0" class="form-control" id="n" autofocus />
+            <label class="form-label mt-4">Tamanho populacional:</label>
+            <input type="text" class="form-control input-positive-int" id="n" inputmode="decimal" autofocus />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Número inicial de infectados:</label>
-            <input type="number" min="0" class="form-control" id="io" />
+            <input type="text" class="form-control input-positive-int" id="io" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Número reprodutivo básico (de 0 a 10):</label>
-            <input type="number" min="0" max="10" class="form-control" id="r0" />
+            <input type="text" class="form-control input-positive-float input-apply-bounds" id="r0" min="0" max="10" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Redução percentual na transmissão (de 0 a 1):</label>
-            <input type="number" min="0" max="1" class="form-control" id="theta" />
+            <input type="text" class="form-control input-positive-float input-apply-bounds" id="theta" min="0" max="1" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Taxa de mortalidade (de 0 a 100%):</label>
-            <input type="number" min="0" max="100" class="form-control" id="delta" />
+            <input type="text" class="form-control input-positive-float input-apply-bounds" id="delta" min="0" max="100" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Taxa de internamento (de 0 a 100%):</label>
-            <input type="number" min="0" max="100" class="form-control" id="tau" />
+            <input type="text" class="form-control input-positive-float input-apply-bounds" id="tau" min="0" max="100" inputmode="decimal" />
         </div>
 
         <div class="row mt-3 mb-1">
@@ -51,33 +51,33 @@
         </div>
 
         <div class="row">
-            <label class="form-label mt-2">Tempo (em dias) em que o paciente está infectado:</label>
-            <input type="number" min="1" class="form-control" id="tinf" />
+            <label class="form-label mt-3">Tempo (em dias) em que o paciente está infectado:</label>
+            <input type="text" class="form-control input-positive-int input-apply-bounds" id="tinf" min="1" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Tempo (em dias) de incubação:</label>
-            <input type="number" min="1" class="form-control" id="tinc" />
+            <input type="text" class="form-control input-positive-int input-apply-bounds" id="tinc" min="1" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Tempo (em dias) do final do período de incubação até o falecimento:</label>
-            <input type="number" min="1" class="form-control" id="tm" />
+            <input type="text" class="form-control input-positive-int" id="tm" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Tempo (em dias) de internamento hospitalar:</label>
-            <input type="number" min="1" class="form-control" id="tint" />
+            <input type="text" class="form-control input-positive-int" id="tint" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Tempo (em dias) de recuperação para casos leves:</label>
-            <input type="number" min="1" class="form-control" id="trec" />
+            <input type="text" class="form-control input-positive-int" id="trec" inputmode="decimal" />
         </div>
 
         <div class="row">
             <label class="form-label mt-2">Tempo (em dias) decorrido até a hospitalização:</label>
-            <input type="number" min="1" class="form-control" id="thosp" />
+            <input type="text" class="form-control input-positive-int" id="thosp" inputmode="decimal" />
         </div>
 
         <div class="row mt-3 mb-1">
@@ -85,8 +85,8 @@
         </div>
 
         <div class="row">
-            <label class="form-label mt-2">Tempo de simulação (dias):</label>
-            <input type="number" min="1" class="form-control" id="ts" />
+            <label class="form-label mt-3">Tempo de simulação (dias):</label>
+            <input type="text" class="form-control input-positive-int" id="ts" inputmode="decimal" />
         </div>
 
         <div class="alert alert-warning mt-4" id="evaluate-alert" role="alert" style="display: none">
@@ -98,11 +98,11 @@
     </div>
 
     <div class="container" id="chart-container">
-        <canvas id="chart"></canvas>
+        <canvas id="chart" style="display: none"></canvas>
     </div>
 
-    <div class="container mt-5">
-        <table class="table" id="results-table" style="display: none">
+    <div class="container">
+        <table class="table mt-5" id="results-table" style="display: none">
             <thead>
                 <tr>
                     <th scope="col">Dia</th>
@@ -118,10 +118,31 @@
         </table>
     </div>
 
+    <div class="modal fade" id="incorrect-data-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Erro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Por gentileza, informe os dados corretamente.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #e0e0ff; color: #000">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 
-    <script src="script.js" defer></script>
+    <script src="validation.js" defer></script>
+    <script src="seir.js" defer></script>
+    <script src="table.js" defer></script>
+    <script src="chart.js" defer></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
