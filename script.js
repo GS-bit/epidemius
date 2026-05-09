@@ -39,6 +39,10 @@ function drawTable(resultsS, resultsE, resultsI, resultsR){
      * resultsR: an array containing the daily values of R, in which resultsR[0] is the first day
      */
 
+    if(resultsS.length == resultsE.length == resultsI.length == resultsR.length){
+        return;
+    }
+
     document.getElementById("results-table").querySelector("tbody").innerHTML = ""; // Since the user can perform a calculation after another, it's important to clean the table first
 
     for(let i = resultsS.length - 1; i >= 0; i--){
@@ -56,17 +60,23 @@ function drawTable(resultsS, resultsE, resultsI, resultsR){
 
 function drawChart(resultsS, resultsE, resultsI, resultsR){
     /* It draws a chart on the page.
-     * resultsS: an array containing the daily values of S
-     * resultsE: an array containing the daily values of E
-     * resultsI: an array containing the daily values of I
-     * resultsR: an array containing the daily values of R
+     * resultsS: an array containing the daily values of S, in which resultsS[0] is the first day
+     * resultsE: an array containing the daily values of E, in which resultsS[0] is the first day
+     * resultsI: an array containing the daily values of I, in which resultsS[0] is the first day
+     * resultsR: an array containing the daily values of R, in which resultsS[0] is the first day
      */
+
+    if(resultsS.length == resultsE.length == resultsI.length == resultsR.length){
+        return;
+    }
 
     days = [];
 
     for(let i = 0; i < resultsS.length; i++){
         days.push(i);
     }
+
+    document.getElementById("chart-container").innerHTML = `<canvas id="chart"></canvas>`;
 
     const ctx = document.getElementById("chart").getContext("2d");
 
@@ -138,10 +148,12 @@ function drawChart(resultsS, resultsE, resultsI, resultsR){
 
 const evaluate_button = document.getElementById("evaluate-button");
 evaluate_button.addEventListener("click", ()  => {
-    /* Telling the user we have to wait the process: */
+    /* Telling the user the data is being processed: */
 
-    document.getElementById("evaluate-button").innerHTML = "Processando dados...";
-    document.getElementById("evaluate-button").classList.replace("btn-primary", "btn-secondary");
+    document.getElementById("evaluate-alert").style.display = "";
+    document.getElementById("evaluate-alert").classList.add("alert-warning");
+    document.getElementById("evaluate-alert").classList.remove("alert-info");
+    document.getElementById("evaluate-alert").innerHTML = "Processando dados...";
 
     /* These are the variables used to perform the evaluations in the calculator: */
 
@@ -199,21 +211,14 @@ evaluate_button.addEventListener("click", ()  => {
         resultsR.push(current_state[3]);
     }
 
-
-    console.log(resultsS);
-
-    //resultsS = resultsS.reverse();
-    //resultsE = resultsE.reverse();
-    //resultsI = resultsI.reverse();
-    //resultsR = resultsR.reverse();
-
     /* Showing the results on the screen: */
 
     drawTable(resultsS, resultsE, resultsI, resultsR);
     drawChart(resultsS, resultsE, resultsI, resultsR);
 
-    /* Setting default settings: */
+    /* Telling the user the results are on the screen: */
 
-    document.getElementById("evaluate-button").innerHTML = "Processar dados";
-    document.getElementById("evaluate-button").classList.replace("btn-secondary", "btn-primary");
+    document.getElementById("evaluate-alert").classList.add("alert-info");
+    document.getElementById("evaluate-alert").classList.remove("alert-warning");
+    document.getElementById("evaluate-alert").innerHTML = "Gráfico e tabela gerados com sucesso!";
 });
