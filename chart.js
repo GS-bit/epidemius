@@ -1,5 +1,5 @@
 function drawChart(resultsS, resultsE, resultsI, resultsR){
-    /* It draws a chart on the page.
+    /* It draws a chart on the page to show the results.
      * resultsS: an array containing the daily values of S, in which resultsS[0] is the first day
      * resultsE: an array containing the daily values of E, in which resultsS[0] is the first day
      * resultsI: an array containing the daily values of I, in which resultsS[0] is the first day

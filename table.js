@@ -1,5 +1,5 @@
 function drawTable(resultsS, resultsE, resultsI, resultsR){
-    /* It draws a table on the page.
+    /* It draws a table on the page to show the results.
      * resultsS: an array containing the daily values of S, in which resultsS[0] is the first day
      * resultsE: an array containing the daily values of E, in which resultsE[0] is the first day
      * resultsI: an array containing the daily values of I, in which resultsI[0] is the first day
